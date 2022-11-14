@@ -106,3 +106,106 @@ showName2(user);
 showName2(car);
 
 // showName2(book);
+
+// 유틸리티 타입
+
+// keyof : 인터페이스의 키값들을 유니언형태로 받을 수 있다.
+interface User5 {
+  id: number;
+  name: string;
+  age: number;
+  gender: 'm' | 'f';
+}
+
+type UserKey = keyof User5; // 'id' | 'name' | 'age' | 'gender' 와 동일하다
+const uk: UserKey = 'id';
+
+// Partial<T> 파셜: 프로퍼티를 모두 옵션으로 바꿔주어 일부만 사용하는게 가능하다.
+// age와 gender가 없어서 에러가 뜬다. 아래와 동일하다고 보면 된다.
+
+/* interface User5 {
+  id?: number;
+  name?: string;
+  age?: number;
+  gender?: 'm' | 'f';
+} */
+let admin: Partial<User5> = {
+  id: 1,
+  name: 'Bob',
+};
+
+// Required<T> :  모든 프로퍼티를 필수로 바꿔준다
+interface User6 {
+  id: number;
+  name: string;
+  age?: number;
+}
+
+let admin2: Required<User6> = {
+  id: 1,
+  name: 'Bob',
+  age: 30,
+};
+
+// Readonly<T>
+let admin3: Readonly<User6> = {
+  id: 1,
+  name: 'Bob',
+  age: 30,
+};
+
+// admin3.id = 4 // 와 같이 재할당이 불가능하고 처음 할당할때에만 가능하다.
+
+// Record<K, T> : k는 key, T는 type으러 지정하는 느낌으로 사용한다
+type Grade2 = '1' | '2' | '3' | '4';
+type Score2 = 'A' | 'B' | 'C' | 'D' | 'F';
+
+// const score2: Record<'1' | '2' | '3' | '4', 'A' | 'B' | 'C' | 'D' | 'F'>;    아래처럼 선언할 수도 있다.
+const score2: Record<Grade2, Score2> = {
+  1: 'A',
+  2: 'B',
+  3: 'C',
+  4: 'D',
+};
+
+interface User7 {
+  id: number;
+  name: string;
+  age: number;
+}
+
+function inValid(user: User7) {
+  const result: Record<keyof User7, boolean> = {
+    id: user.id > 0,
+    name: user.name !== '',
+    age: user.age > 0,
+  };
+  return result;
+}
+
+// Pick<T, K> T: 인터페이스, K는 사용할 타입(파라미터)를 꼽는다
+interface User8 {
+  id: number;
+  name: string;
+  age: number;
+  gender: 'm' | 'f';
+}
+
+const admin8: Pick<User8, 'id' | 'name'> = {
+  id: 0,
+  name: 'Bob',
+};
+
+// Omit<T, K> : Pick<T, K> 의 반대로 특정 프로퍼티를 생략하고 사용할 수 있는 것, 생략할 프로퍼티를 고르는것
+const admin9: Omit<User8, 'age' | 'gender'> = {
+  id: 0,
+  name: 'Bob',
+};
+
+// Exclude<T1, T2> : Omit 과 비슷하지만 Omit은 프로퍼티를 제외하는것이고, Exclude는 타입으로 제외시키는 것이다. T1의 타입중 T2타입과 겹치는것을 제외하는 것이다
+type T1 = string | number | boolean;
+type T2 = Exclude<T1, number | string>;
+
+// NonNullable<T> : null을 제외한 타입을 생성한다, 언디파인드도 함께 제외시킨다
+type T3 = string | null | undefined | void;
+type T4 = NonNullable<T3>;
