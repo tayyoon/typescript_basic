@@ -72,3 +72,8 @@ function join(name: string, age: number | string): User3 | string {
 
 const sam2: User3 = join('sam', 30);
 const jame: string = join('jane', '30');
+
+// 여러개의 키값들을 한번에 지정할 수도 있다.
+type Infinite = {
+  [key: string]: string; // 키값들은 전부 string, 벨류값들도 string...
+};
